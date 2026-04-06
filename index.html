@@ -64,15 +64,24 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
 .ex-top { padding: 18px 16px 14px; display: flex; align-items: center; justify-content: space-between; }
 .ex-name { font-size: 16px; font-weight: 700; color: var(--text); }
 .ex-meta { font-size: 12px; color: var(--muted); margin-top: 6px; font-weight: 500; }
-.set-grid-header { display: grid; grid-template-columns: 32px 1fr 1fr 80px; gap: 10px; padding: 0 16px 10px; font-size: 10px; color: var(--muted); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
-.set-row-grid { display: grid; grid-template-columns: 32px 1fr 1fr 80px; gap: 10px; padding: 6px 16px; align-items: center; }
-.set-num-badge { width: 30px; height: 30px; border-radius: 10px; background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--muted); border: 1px solid var(--border); }
+
+/* KUTU KAYMA DÜZELTMESİ: Yeni ızgara sistemi */
+.set-grid-header { display: grid; grid-template-columns: 28px 1fr 1fr 65px; gap: 6px; padding: 0 12px 10px; font-size: 10px; color: var(--muted); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+.set-row-grid { display: grid; grid-template-columns: 28px 1fr 1fr 65px; gap: 6px; padding: 6px 12px; align-items: center; }
+.set-num-badge { width: 28px; height: 28px; border-radius: 8px; background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--muted); border: 1px solid var(--border); }
 
 /* ---- INPUTS & BUTTONS ---- */
-.check-input, .set-input, .rpe-sel { background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-family: var(--font-body); font-size: 15px; font-weight: 600; padding: 12px 14px; outline: none; -webkit-appearance: none; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); transition: border-color 0.2s; color-scheme: dark; }
+/* Gıcık okları gizleyen kodlar */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+input[type=number] { -moz-appearance: textfield; }
+
+/* Kutuların ekrandan taşmasını engelleyen genişlik sabitlemesi */
+.check-input, .set-input, .rpe-sel { width: 100%; min-width: 0; background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-family: var(--font-body); font-size: 15px; font-weight: 600; padding: 12px 14px; outline: none; -webkit-appearance: none; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); transition: border-color 0.2s; color-scheme: dark; }
 .check-input:focus, .set-input:focus, .rpe-sel:focus { border-color: var(--accent); box-shadow: 0 0 12px rgba(34,211,238,0.15), inset 0 2px 4px rgba(0,0,0,0.2); }
-.set-input, .rpe-sel { padding: 12px 8px; text-align: center; }
-.set-input::placeholder { color: rgba(255,255,255,0.15); font-weight: 500; font-size: 14px; font-style: italic; }
+.set-input, .rpe-sel { padding: 10px 4px; text-align: center; font-size: 14px;}
+.set-input::placeholder { color: rgba(255,255,255,0.15); font-weight: 500; font-size: 13px; font-style: italic; }
+
 .ex-note-input { width: 100%; background: rgba(0,0,0,0.15); border: none; border-top: 1px solid rgba(255,255,255,0.02); color: var(--accent); font-family: var(--font-body); font-size: 13px; font-weight: 500; padding: 14px 16px; outline: none; transition: background 0.2s; margin-top: 8px; }
 .date-row input[type=date] { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; color: var(--text); font-family: var(--font-body); font-size: 15px; font-weight: 600; padding: 14px; outline: none; -webkit-appearance: none; color-scheme: dark; text-align: center; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); margin-bottom: 16px;}
 
@@ -378,7 +387,6 @@ try { checkins = JSON.parse(localStorage.getItem('wt2_ci')||'[]'); } catch(e){}
 try { customNames = JSON.parse(localStorage.getItem('wt2_names')||'{}'); } catch(e){}
 try { customExercises = JSON.parse(localStorage.getItem('wt2_customs')||'{}'); } catch(e){}
 
-// BUG FIX: Yerel saate göre bugünün tarihini güvenli alma fonksiyonu
 function today() {
   const d = new Date();
   d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
