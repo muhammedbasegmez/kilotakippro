@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Vücut & Kasa Pro - Final</title>
+<title>Vücut & Kasa Pro - Excel Edition</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#09090b">
@@ -45,6 +45,7 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
 .set-input::placeholder { color: rgba(255, 255, 255, 0.15); font-style: italic; }
 .del-set { color: var(--red); font-size: 18px; cursor: pointer; opacity: 0.5; text-align: center; }
 .btn-action { background: none; border: 1px dashed rgba(255,255,255,0.1); color: var(--muted); padding: 10px; border-radius: 12px; font-size: 11px; font-weight: 700; width: calc(100% - 32px); margin: 4px 16px 14px; cursor: pointer; }
+.btn-footer { display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--surface2); border: 1px solid var(--border); color: var(--text); padding: 18px; border-radius: var(--radius); margin: 20px 16px; font-size: 14px; font-weight: 700; cursor: pointer; }
 .chart-container { background: #121215; border-radius: var(--radius); padding: 16px; margin-bottom: 20px; border: 1px solid var(--border); }
 .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 300; align-items: flex-end; }
 .modal-backdrop.open { display: flex; }
@@ -68,6 +69,7 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
   </div>
   <div style="padding:0 20px 16px;"><input type="date" id="log-date" class="set-input" style="padding:14px; font-size:16px;" onchange="onDateChange()" /></div>
   <div id="ex-list"></div>
+  <button class="btn-footer" onclick="addCustomExercise()">+ Yeni Hareket Ekle</button>
 </div>
 
 <div class="page" id="page-history">
@@ -89,10 +91,13 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
 
 <div class="modal-backdrop" id="settings-modal" onclick="if(event.target===this)closeSettings()">
   <div class="modal-sheet">
-    <div style="margin-bottom:20px; font-weight:700;">Ayarlar 🛡️</div>
-    <button class="set-input" onclick="exportData()" style="background:var(--accent); color:#000; margin-bottom:12px;">📥 Verileri Yedekle</button>
-    <label class="set-input" style="display:block; cursor:pointer;">📤 Yedeği Yükle <input type="file" style="display:none" onchange="importData(event)"></label>
-    <button class="set-input" style="color:var(--red); border-color:var(--red); margin-top:20px;" onclick="deleteDay()">🗑️ Günü Temizle</button>
+    <div style="margin-bottom:20px; font-weight:700;">Veri Yönetimi 🛡️</div>
+    <div style="display:grid; gap:10px;">
+        <button class="set-input" onclick="exportExcel()" style="background:var(--gold); color:#000;">📊 Excel Olarak İndir (CSV)</button>
+        <button class="set-input" onclick="exportData()" style="background:var(--accent); color:#000;">📥 JSON Yedekle</button>
+        <label class="set-input" style="display:block; cursor:pointer; text-align:center;">📤 Yedek Yükle <input type="file" style="display:none" onchange="importData(event)"></label>
+        <button class="set-input" style="color:var(--red); border-color:var(--red); margin-top:10px;" onclick="deleteDay()">🗑️ Günü Temizle</button>
+    </div>
   </div>
 </div>
 
@@ -109,26 +114,15 @@ const EX_DB = [
 ];
 
 const DAYS = {
-  push: { label: 'İtiş', exercises: [
-    {id:'idp', sets:3, rpe:'8'}, {id:'mcp', sets:3, rpe:'8.5'}, {id:'msp', sets:3, rpe:'8'}, 
-    {id:'clr', sets:4, rpe:'9'}, {id:'trp', sets:3, rpe:'9'}, {id:'ote', sets:3, rpe:'8.5'}
-  ]},
-  pull: { label: 'Çekiş', exercises: [
-    {id:'latp', sets:3, rpe:'8'}, {id:'csm', sets:3, rpe:'8.5'}, {id:'fp', sets:3, rpe:'8'}, 
-    {id:'ibc', sets:3, rpe:'9'}, {id:'shc', sets:3, rpe:'9'}
-  ]},
-  leg: { label: 'Bacak', exercises: [
-    {id:'lpr', sets:4, rpe:'8.5'}, {id:'bss', sets:3, rpe:'8.5'}, {id:'lex', sets:3, rpe:'9.5'}, 
-    {id:'slc', sets:3, rpe:'9.5'}, {id:'lpc', sets:4, rpe:'9'}
-  ]},
-  upper: { label: 'Upper', exercises: [
-    {id:'pdf', sets:3, rpe:'8.5'}, {id:'latw', sets:4, rpe:'8.5'}, {id:'dlr', sets:4, rpe:'9'}, 
-    {id:'rpd', sets:3, rpe:'9'}, {id:'mpc', sets:3, rpe:'9.5'}
-  ]}
+  push: { label: 'İtiş', exercises: [{id:'idp', sets:3, rpe:'8'}, {id:'mcp', sets:3, rpe:'8.5'}, {id:'msp', sets:3, rpe:'8'}, {id:'clr', sets:4, rpe:'9'}, {id:'trp', sets:3, rpe:'9'}, {id:'ote', sets:3, rpe:'8.5'}]},
+  pull: { label: 'Çekiş', exercises: [{id:'latp', sets:3, rpe:'8'}, {id:'csm', sets:3, rpe:'8.5'}, {id:'fp', sets:3, rpe:'8'}, {id:'ibc', sets:3, rpe:'9'}, {id:'shc', sets:3, rpe:'9'}]},
+  leg: { label: 'Bacak', exercises: [{id:'lpr', sets:4, rpe:'8.5'}, {id:'bss', sets:3, rpe:'8.5'}, {id:'lex', sets:3, rpe:'9.5'}, {id:'slc', sets:3, rpe:'9.5'}, {id:'lpc', sets:4, rpe:'9'}]},
+  upper: { label: 'Upper', exercises: [{id:'pdf', sets:3, rpe:'8.5'}, {id:'latw', sets:4, rpe:'8.5'}, {id:'dlr', sets:4, rpe:'9'}, {id:'rpd', sets:3, rpe:'9'}, {id:'mpc', sets:3, rpe:'9.5'}]}
 };
 
 let logs = JSON.parse(localStorage.getItem('wt2_logs') || '[]');
 let customNames = JSON.parse(localStorage.getItem('wt2_names') || '{}');
+let customExercises = JSON.parse(localStorage.getItem('wt2_customs') || '{}');
 let curDay = 'push';
 
 function today() { return new Date().toLocaleDateString('sv'); }
@@ -142,17 +136,16 @@ function onDateChange() {
   renderExList();
 }
 
-function selectDay(day) {
-  curDay = day;
-  save(); 
-  renderExList();
-}
+function selectDay(day) { curDay = day; save(); renderExList(); }
 
 function renderExList() {
   const date = document.getElementById('log-date').value;
   const existing = logs.find(x => x.date === date) || { day: curDay, exercises: [] };
   const displayDay = existing.day || curDay;
-  const exercises = DAYS[displayDay].exercises;
+  
+  const baseEx = DAYS[displayDay]?.exercises || [];
+  const extraEx = customExercises[displayDay] || [];
+  const exercises = [...baseEx, ...extraEx];
   
   let html = '';
   exercises.forEach(exConf => {
@@ -169,15 +162,10 @@ function renderExList() {
     }
 
     html += `<div class="ex-card" data-exid="${id}">
-      <div class="ex-top"><div class="ex-name" onclick="renameEx('${id}')">${getExName(id)} ✏️</div></div>
+      <div class="ex-top"><div class="ex-name" onclick="renameEx('${id}')">${getExName(id)} ✏️</div> ${exConf.custom ? `<div onclick="delCustomEx('${displayDay}','${id}')" style="color:var(--red); font-size:12px;">Sil</div>` : ''}</div>
       ${radar}
-      <div class="sets-container">
-        ${renderSets(id, data.sets, prev, exConf)}
-      </div>
-      <div style="display:flex;">
-        <button class="btn-action" onclick="addSet(this, false)">+ Set</button>
-        <button class="btn-action" style="color:var(--red);" onclick="addSet(this, true)">+ Drop</button>
-      </div>
+      <div class="sets-container">${renderSets(id, data.sets, prev, exConf)}</div>
+      <div style="display:flex;"><button class="btn-action" onclick="addSet(this, false)">+ Set</button><button class="btn-action" style="color:var(--red);" onclick="addSet(this, true)">+ Drop</button></div>
     </div>`;
   });
   document.getElementById('ex-list').innerHTML = html;
@@ -185,26 +173,23 @@ function renderExList() {
 }
 
 function renderSets(id, sets, prev, exConf) {
-    const rpeDefault = exConf.rpe;
-    if(sets.length > 0) {
-        return sets.map((s, i) => renderSetRow(i, s, prev?.sets[i], rpeDefault)).join('');
-    } else {
-        let res = '';
-        for(let i=0; i<exConf.sets; i++) res += renderSetRow(i, {w:'', r:'', rpe:''}, prev?.sets[i], rpeDefault);
-        return res;
-    }
+    const rpeDefault = exConf.rpe || '8';
+    if(sets.length > 0) return sets.map((s, i) => renderSetRow(i, s, prev?.sets[i], rpeDefault)).join('');
+    let res = '';
+    const setTarget = exConf.sets || 3;
+    for(let i=0; i<setTarget; i++) res += renderSetRow(i, {w:'', r:'', rpe:''}, prev?.sets[i], rpeDefault);
+    return res;
 }
 
 function renderSetRow(i, s, pS, rpeDefault) {
   const phW = pS ? pS.w : 'kg';
   const phR = pS ? pS.r : 'tek';
-  const currentRPE = s.rpe || rpeDefault;
   return `<div class="set-grid">
     <div class="set-num ${s.isDrop?'drop-badge':''}">${s.isDrop?'DS':i+1}</div>
     <input type="number" class="set-input w-in" placeholder="${phW}" value="${s.w||''}" oninput="save()">
     <input type="number" class="set-input r-in" placeholder="${phR}" value="${s.r||''}" oninput="save()">
     <select class="set-input rpe-in" onchange="save()">
-      ${[10,9.5,9,8.5,8,7.5,7,6].map(v => `<option value="${v}" ${currentRPE==v?'selected':''}>${v}</option>`).join('')}
+      ${[10,9.5,9,8.5,8,7.5,7,6].map(v => `<option value="${v}" ${ (s.rpe||rpeDefault) ==v ?'selected':''}>${v}</option>`).join('')}
     </select>
     <div class="del-set" onclick="delRow(this)">×</div>
   </div>`;
@@ -213,43 +198,17 @@ function renderSetRow(i, s, pS, rpeDefault) {
 function delRow(btn) {
     const container = btn.closest('.sets-container');
     btn.parentElement.remove();
-    // Numaraları Yeniden Düzenle
-    Array.from(container.querySelectorAll('.set-grid')).forEach((row, index) => {
+    Array.from(container.querySelectorAll('.set-grid')).forEach((row, idx) => {
         const badge = row.querySelector('.set-num');
-        if(!badge.classList.contains('drop-badge')) {
-            badge.innerText = index + 1;
-        }
+        if(!badge.classList.contains('drop-badge')) badge.innerText = idx + 1;
     });
     save();
 }
 
 function addSet(btn, isDrop) {
   const container = btn.closest('.ex-card').querySelector('.sets-container');
-  const exId = btn.closest('.ex-card').dataset.exid;
-  
-  // Güncel programdan RPE bul
-  let rpeDef = '8';
-  for(let d in DAYS) {
-      let found = DAYS[d].exercises.find(e => e.id === exId);
-      if(found) rpeDef = found.rpe;
-  }
-
-  const i = container.children.length;
-  container.insertAdjacentHTML('beforeend', renderSetRow(i, { isDrop }, null, rpeDef));
-  
-  // Numaraları Tazele
-  Array.from(container.querySelectorAll('.set-grid')).forEach((row, index) => {
-      const badge = row.querySelector('.set-num');
-      if(!badge.classList.contains('drop-badge')) {
-          badge.innerText = index + 1;
-      }
-  });
+  container.insertAdjacentHTML('beforeend', renderSetRow(container.children.length, { isDrop }));
   save();
-}
-
-function renameEx(id) {
-  const n = prompt("Yeni isim:", getExName(id));
-  if(n) { customNames[id] = n; localStorage.setItem('wt2_names', JSON.stringify(customNames)); renderExList(); }
 }
 
 function save() {
@@ -270,32 +229,42 @@ function save() {
   localStorage.setItem('wt2_logs', JSON.stringify(logs));
 }
 
+function addCustomExercise() {
+    const name = prompt("Hareket Adı:");
+    if(!name) return;
+    const id = "c_" + Date.now();
+    if(!customExercises[curDay]) customExercises[curDay] = [];
+    customExercises[curDay].push({ id, name, sets:3, rpe:'8', custom:true });
+    localStorage.setItem('wt2_customs', JSON.stringify(customExercises));
+    renderExList();
+}
+
+function delCustomEx(day, id) {
+    if(confirm("Silinsin mi?")) {
+        customExercises[day] = customExercises[day].filter(x => x.id !== id);
+        localStorage.setItem('wt2_customs', JSON.stringify(customExercises));
+        renderExList();
+    }
+}
+
+function renameEx(id) {
+  const n = prompt("Yeni isim:", getExName(id));
+  if(n) { customNames[id] = n; localStorage.setItem('wt2_names', JSON.stringify(customNames)); renderExList(); }
+}
+
 function renderHistory() {
   const f = document.getElementById('hist-feed');
   if(!logs.length) { f.innerHTML = '<div style="text-align:center; color:var(--muted); padding:40px;">Henüz kayıt yok.</div>'; return; }
   f.innerHTML = logs.sort((a,b) => b.date.localeCompare(a.date)).map(l => {
-    let totalVol = 0; let totalSets = 0; let bestEx = {name:'', e:0};
+    let vol = 0, sets = 0, best = {n:'', e:0};
     l.exercises.forEach(e => {
       e.sets.forEach(s => {
-        totalVol += (s.w * s.r); totalSets++;
+        vol += (s.w * s.r); sets++;
         let e1 = calcE1RM(s.w, s.r, s.rpe);
-        if(e1 > bestEx.e) bestEx = {name: getExName(e.id), e: e1};
+        if(e1 > best.e) best = {n: getExName(e.id), e: e1};
       });
     });
-    return `
-    <div class="chart-container">
-      <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
-        <div style="font-weight:700;">${l.date}</div>
-        <div style="color:var(--accent); font-weight:700;">${l.day.toUpperCase()}</div>
-      </div>
-      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; font-size:12px; color:var(--muted); margin-bottom:12px;">
-        <div>📦 ${totalSets} Set</div>
-        <div>⚖️ ${totalVol} kg Hacim</div>
-      </div>
-      <div style="font-size:13px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.05);">
-        <span style="color:var(--gold)">⭐ En İyi:</span> ${bestEx.name} (${Math.round(bestEx.e)} kg)
-      </div>
-    </div>`;
+    return `<div class="chart-container"><div style="display:flex; justify-content:space-between; margin-bottom:12px;"><div style="font-weight:700;">${l.date}</div><div style="color:var(--accent); font-weight:700;">${l.day.toUpperCase()}</div></div><div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; font-size:12px; color:var(--muted); margin-bottom:12px;"><div>📦 ${sets} Set</div><div>⚖️ ${vol} kg</div></div><div style="font-size:13px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.05);"><span style="color:var(--gold)">⭐ En İyi:</span> ${best.n} (${Math.round(best.e)} kg)</div></div>`;
   }).join('');
 }
 
@@ -322,36 +291,48 @@ function renderProgress() {
     return { date: l.date, val: Math.round(ex.sets.reduce((a,s) => Math.max(a, calcE1RM(s.w, s.r, s.rpe)), 0)) };
   });
   document.getElementById('prog-content').innerHTML = `<div class="chart-container"><canvas id="chart"></canvas></div>`;
-  const ctx = document.getElementById('chart').getContext('2d');
   if(chart) chart.destroy();
-  chart = new Chart(ctx, {
+  chart = new Chart(document.getElementById('chart').getContext('2d'), {
     type: 'bar',
-    data: {
-      labels: data.map(d => d.date.slice(5)),
-      datasets: [{
-        data: data.map(d => d.val),
-        backgroundColor: data.map((d, i) => d.val === Math.max(...data.map(x=>x.val)) ? '#facc15' : 'rgba(34,211,238,0.2)'),
-        borderRadius: 6
-      }]
-    },
+    data: { labels: data.map(d => d.date.slice(5)), datasets: [{ data: data.map(d => d.val), backgroundColor: data.map(d => d.val === Math.max(...data.map(x=>x.val)) ? '#facc15' : 'rgba(34,211,238,0.2)'), borderRadius: 6 }] },
     options: { plugins: { legend: { display: false } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' } }, x: { grid: { display: false } } } }
   });
 }
 
 function openSettings() { document.getElementById('settings-modal').classList.add('open'); }
 function closeSettings() { document.getElementById('settings-modal').classList.remove('open'); }
+
+function exportExcel() {
+    if(logs.length === 0) return alert("Kayıt bulunamadı.");
+    let csv = "\uFEFFTarih;Gün;Hareket;Set No;Agirlik;Tekrar;RPE\n";
+    logs.forEach(l => {
+        l.exercises.forEach(e => {
+            e.sets.forEach((s, idx) => {
+                csv += `${l.date};${l.day};${getExName(e.id)};${idx+1};${s.w};${s.r};${s.rpe}\n`;
+            });
+        });
+    });
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `Antrenman_Gelisim_${today()}.csv`;
+    link.click();
+}
+
 function exportData() {
-  const blob = new Blob([JSON.stringify({ logs, customNames })], { type: 'application/json' });
+  const blob = new Blob([JSON.stringify({ logs, customNames, customExercises })], { type: 'application/json' });
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `VucutKasa_Yedek.json`; a.click();
 }
+
 function importData(e) {
   const reader = new FileReader();
   reader.onload = (ev) => {
     const d = JSON.parse(ev.target.result);
-    if(d.logs) { logs = d.logs; customNames = d.customNames || {}; localStorage.setItem('wt2_logs', JSON.stringify(logs)); location.reload(); }
+    if(d.logs) { logs = d.logs; customNames = d.customNames || {}; customExercises = d.customExercises || {}; localStorage.setItem('wt2_logs', JSON.stringify(logs)); location.reload(); }
   };
   reader.readAsText(e.target.files[0]);
 }
+
 function deleteDay() { if(confirm("Günü temizle?")) { const d = document.getElementById('log-date').value; logs = logs.filter(l => l.date !== d); localStorage.setItem('wt2_logs', JSON.stringify(logs)); location.reload(); } }
 
 document.getElementById('log-date').value = today();
