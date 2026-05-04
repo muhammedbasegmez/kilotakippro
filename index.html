@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Vücut & Kasa Pro - Excel Edition</title>
+<title>Kilo Takip</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#09090b">
@@ -29,10 +29,11 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
 .header-title { font-family: var(--font-display); font-size: 46px; color: var(--text); line-height: 1; }
 .day-pills { display: flex; gap: 10px; padding: 0 20px 20px; overflow-x: auto; scrollbar-width: none; }
 .day-pill { flex-shrink: 0; padding: 12px 20px; border-radius: 100px; border: 1px solid var(--border); background: rgba(24,24,27,0.8); color: var(--muted); font-size: 13px; font-weight: 600; }
-.day-pill.active-push { border-color: var(--push); color: var(--push); }
-.day-pill.active-pull { border-color: var(--pull); color: var(--pull); }
-.day-pill.active-leg  { border-color: var(--leg); color: var(--leg); }
-.day-pill.active-upper { border-color: var(--upper); color: var(--upper); }
+.day-pill.active-push { border-color: var(--push); color: var(--push); background: rgba(56,189,248,0.1); }
+.day-pill.active-pull { border-color: var(--pull); color: var(--pull); background: rgba(52,211,153,0.1); }
+.day-pill.active-leg  { border-color: var(--leg); color: var(--leg); background: rgba(251,191,36,0.1); }
+.day-pill.active-upper { border-color: var(--upper); color: var(--upper); background: rgba(192,132,252,0.1); }
+
 .ex-card { background: linear-gradient(160deg, #1c1c20 0%, #121215 100%); border: 1px solid rgba(255,255,255,0.04); border-radius: var(--radius); margin: 0 16px 16px; overflow: hidden; }
 .ex-top { padding: 18px 16px 10px; display: flex; align-items: center; justify-content: space-between; }
 .ex-name { font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
@@ -43,9 +44,21 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
 .drop-badge { background: rgba(239, 68, 68, 0.15); color: #ef4444; border-color: rgba(239, 68, 68, 0.3); }
 .set-input { width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: 10px; color: #fff; padding: 10px 4px; text-align: center; font-size: 14px; font-weight: 600; outline: none; }
 .set-input::placeholder { color: rgba(255, 255, 255, 0.15); font-style: italic; }
+.ex-note-input { width: 100%; background: rgba(255,255,255,0.03); border: none; border-top: 1px solid var(--border); color: var(--accent); font-size: 12px; padding: 12px 16px; outline: none; }
 .del-set { color: var(--red); font-size: 18px; cursor: pointer; opacity: 0.5; text-align: center; }
 .btn-action { background: none; border: 1px dashed rgba(255,255,255,0.1); color: var(--muted); padding: 10px; border-radius: 12px; font-size: 11px; font-weight: 700; width: calc(100% - 32px); margin: 4px 16px 14px; cursor: pointer; }
-.btn-footer { display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--surface2); border: 1px solid var(--border); color: var(--text); padding: 18px; border-radius: var(--radius); margin: 20px 16px; font-size: 14px; font-weight: 700; cursor: pointer; }
+
+/* ---- MONTHLY CALENDAR ---- */
+.calendar-container { background: #121215; border-radius: var(--radius); padding: 16px; margin-bottom: 20px; border: 1px solid var(--border); }
+.calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.cal-weekday { font-size: 9px; text-align: center; color: var(--muted); font-weight: 700; padding-bottom: 6px; }
+.cal-day { aspect-ratio: 1; border-radius: 6px; border: 1px solid rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--muted); position: relative; }
+.cal-day.has-push { border-color: var(--push); background: rgba(56,189,248,0.2); color: var(--push); font-weight: bold; }
+.cal-day.has-pull { border-color: var(--pull); background: rgba(52,211,153,0.2); color: var(--pull); font-weight: bold; }
+.cal-day.has-leg  { border-color: var(--leg); background: rgba(251,191,36,0.2); color: var(--leg); font-weight: bold; }
+.cal-day.has-upper { border-color: var(--upper); background: rgba(192,132,252,0.2); color: var(--upper); font-weight: bold; }
+
 .chart-container { background: #121215; border-radius: var(--radius); padding: 16px; margin-bottom: 20px; border: 1px solid var(--border); }
 .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 300; align-items: flex-end; }
 .modal-backdrop.open { display: flex; }
@@ -59,8 +72,9 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
 <button class="settings-btn" onclick="openSettings()">🛡️</button>
 <div class="toast" id="toast"></div>
 
+<!-- ANTRENMAN SAYFASI -->
 <div class="page active" id="page-log">
-  <div class="page-header"><div class="header-title">ANTRENMAN <span>GÜNLÜĞÜ</span></div></div>
+  <div class="page-header"><div class="header-title">KİLO <span>TAKİP</span></div></div>
   <div class="day-pills">
     <button class="day-pill" data-day="push" onclick="selectDay('push')">İtiş (Pzt)</button>
     <button class="day-pill" data-day="pull" onclick="selectDay('pull')">Çekiş (Sal)</button>
@@ -69,35 +83,44 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
   </div>
   <div style="padding:0 20px 16px;"><input type="date" id="log-date" class="set-input" style="padding:14px; font-size:16px;" onchange="onDateChange()" /></div>
   <div id="ex-list"></div>
-  <button class="btn-footer" onclick="addCustomExercise()">+ Yeni Hareket Ekle</button>
+  <button class="btn-action" style="margin:20px 16px; border-style:solid;" onclick="addCustomExercise()">+ Yeni Hareket Ekle</button>
 </div>
 
+<!-- GEÇMİŞ SAYFASI -->
 <div class="page" id="page-history">
   <div class="page-header"><div class="header-title">GEÇ<span>MİŞ</span></div></div>
   <div id="hist-feed" style="padding:0 16px;"></div>
 </div>
 
+<!-- İLERLEME SAYFASI -->
 <div class="page" id="page-progress">
   <div class="page-header"><div class="header-title">İLER<span>LEME</span></div></div>
-  <div style="padding:0 16px;"><select class="set-input" id="prog-ex-sel" onchange="renderProgress()" style="margin-bottom:20px;"></select></div>
-  <div id="prog-content" style="padding:0 16px;"></div>
+  <div style="padding:0 20px 10px;">
+    <div class="calendar-container">
+      <div class="calendar-header">
+        <div id="cal-month-name" style="font-size:14px; font-weight:700;">Mayıs 2026</div>
+        <div id="month-total-count" style="font-size:11px; color:var(--muted);">0 Antrenman</div>
+      </div>
+      <div class="calendar-grid" id="cal-grid"></div>
+    </div>
+  </div>
+  <div style="padding:0 20px;"><select class="set-input" id="prog-ex-sel" onchange="renderProgress()" style="margin-bottom:20px;"></select></div>
+  <div id="prog-content" style="padding:0 20px;"></div>
 </div>
 
 <nav class="nav">
   <button class="nav-btn active" onclick="showPage('log',this)"><span class="nav-icon">🏋️</span><span class="nav-label">GÜNLÜK</span></button>
   <button class="nav-btn" onclick="showPage('history',this)"><span class="nav-icon">📅</span><span class="nav-label">GEÇMİŞ</span></button>
-  <button class="nav-btn" onclick="showPage('progress',this)"><span class="nav-icon">🏆</span><span class="nav-label">REKORLAR</span></button>
+  <button class="nav-btn" onclick="showPage('progress',this)"><span class="nav-icon">🏆</span><span class="nav-label">İLERLEME</span></button>
 </nav>
 
 <div class="modal-backdrop" id="settings-modal" onclick="if(event.target===this)closeSettings()">
   <div class="modal-sheet">
-    <div style="margin-bottom:20px; font-weight:700;">Veri Yönetimi 🛡️</div>
-    <div style="display:grid; gap:10px;">
-        <button class="set-input" onclick="exportExcel()" style="background:var(--gold); color:#000;">📊 Excel Olarak İndir (CSV)</button>
-        <button class="set-input" onclick="exportData()" style="background:var(--accent); color:#000;">📥 JSON Yedekle</button>
-        <label class="set-input" style="display:block; cursor:pointer; text-align:center;">📤 Yedek Yükle <input type="file" style="display:none" onchange="importData(event)"></label>
-        <button class="set-input" style="color:var(--red); border-color:var(--red); margin-top:10px;" onclick="deleteDay()">🗑️ Günü Temizle</button>
-    </div>
+    <div style="margin-bottom:20px; font-weight:700;">Veri Kasası 🛡️</div>
+    <button class="set-input" onclick="exportData()" style="background:var(--accent); color:#000; margin-bottom:12px;">📥 JSON Yedekle</button>
+    <button class="set-input" onclick="exportExcel()" style="background:var(--gold); color:#000; margin-bottom:12px;">📊 Excel (CSV) İndir</button>
+    <label class="set-input" style="display:block; cursor:pointer; text-align:center;">📤 Yedek Yükle <input type="file" style="display:none" onchange="importData(event)"></label>
+    <button class="set-input" style="color:var(--red); border-color:var(--red); margin-top:20px;" onclick="deleteDay()">🗑️ Günü Temizle</button>
   </div>
 </div>
 
@@ -110,14 +133,14 @@ const EX_DB = [
   { id:'shc', name:'Seated Hammer Curl' }, { id:'lpr', name:'Leg Press' }, { id:'bss', name:'Bulgarian Split Squat' },
   { id:'lex', name:'Leg Extension' }, { id:'slc', name:'Seated Leg Curl' }, { id:'lpc', name:'Calf Raise' },
   { id:'pdf', name:'Pec Deck Fly' }, { id:'latw', name:'Lat Pulldown Wide' }, { id:'dlr', name:'DB Lateral Raise' }, 
-  { id:'rpd', name:'Reverse Pec Deck' }, { id:'mpc', name:'Machine Preacher Curl' }
+  { id:'rpd', name:'Reverse Pec Deck' }, { id:'mpc', name:'Machine Preacher Curl' }, { id:'tpd', name:'Triceps Pushdown' }
 ];
 
 const DAYS = {
   push: { label: 'İtiş', exercises: [{id:'idp', sets:3, rpe:'8'}, {id:'mcp', sets:3, rpe:'8.5'}, {id:'msp', sets:3, rpe:'8'}, {id:'clr', sets:4, rpe:'9'}, {id:'trp', sets:3, rpe:'9'}, {id:'ote', sets:3, rpe:'8.5'}]},
   pull: { label: 'Çekiş', exercises: [{id:'latp', sets:3, rpe:'8'}, {id:'csm', sets:3, rpe:'8.5'}, {id:'fp', sets:3, rpe:'8'}, {id:'ibc', sets:3, rpe:'9'}, {id:'shc', sets:3, rpe:'9'}]},
   leg: { label: 'Bacak', exercises: [{id:'lpr', sets:4, rpe:'8.5'}, {id:'bss', sets:3, rpe:'8.5'}, {id:'lex', sets:3, rpe:'9.5'}, {id:'slc', sets:3, rpe:'9.5'}, {id:'lpc', sets:4, rpe:'9'}]},
-  upper: { label: 'Upper', exercises: [{id:'pdf', sets:3, rpe:'8.5'}, {id:'latw', sets:4, rpe:'8.5'}, {id:'dlr', sets:4, rpe:'9'}, {id:'rpd', sets:3, rpe:'9'}, {id:'mpc', sets:3, rpe:'9.5'}]}
+  upper: { label: 'Upper', exercises: [{id:'pdf', sets:3, rpe:'8.5'}, {id:'latw', sets:4, rpe:'8.5'}, {id:'dlr', sets:4, rpe:'9'}, {id:'rpd', sets:3, rpe:'9'}, {id:'mpc', sets:3, rpe:'9.5'}, {id:'tpd', sets:3, rpe:'9.5'}]}
 };
 
 let logs = JSON.parse(localStorage.getItem('wt2_logs') || '[]');
@@ -142,7 +165,6 @@ function renderExList() {
   const date = document.getElementById('log-date').value;
   const existing = logs.find(x => x.date === date) || { day: curDay, exercises: [] };
   const displayDay = existing.day || curDay;
-  
   const baseEx = DAYS[displayDay]?.exercises || [];
   const extraEx = customExercises[displayDay] || [];
   const exercises = [...baseEx, ...extraEx];
@@ -150,7 +172,7 @@ function renderExList() {
   let html = '';
   exercises.forEach(exConf => {
     const id = exConf.id;
-    const data = existing.exercises.find(e => e.id === id) || { sets: [] };
+    const data = existing.exercises.find(e => e.id === id) || { sets: [], note: '' };
     const prev = [...logs].sort((a,b) => b.date.localeCompare(a.date)).find(l => l.date < date && l.exercises.some(e => e.id === id))?.exercises.find(e => e.id === id);
 
     let radar = '';
@@ -161,11 +183,14 @@ function renderExList() {
       else radar = `<div class="target-card">🎯 Hedefi Geç: ${Math.round(bestPrev)} kg e1RM</div>`;
     }
 
+    const notePlaceholder = data.note || prev?.note || '';
+
     html += `<div class="ex-card" data-exid="${id}">
-      <div class="ex-top"><div class="ex-name" onclick="renameEx('${id}')">${getExName(id)} ✏️</div> ${exConf.custom ? `<div onclick="delCustomEx('${displayDay}','${id}')" style="color:var(--red); font-size:12px;">Sil</div>` : ''}</div>
+      <div class="ex-top"><div class="ex-name" onclick="renameEx('${id}')">${getExName(id)} ✏️</div></div>
       ${radar}
       <div class="sets-container">${renderSets(id, data.sets, prev, exConf)}</div>
       <div style="display:flex;"><button class="btn-action" onclick="addSet(this, false)">+ Set</button><button class="btn-action" style="color:var(--red);" onclick="addSet(this, true)">+ Drop</button></div>
+      <input type="text" class="ex-note-input" placeholder="Not: ${notePlaceholder}" value="${data.note || ''}" oninput="save()">
     </div>`;
   });
   document.getElementById('ex-list').innerHTML = html;
@@ -176,8 +201,7 @@ function renderSets(id, sets, prev, exConf) {
     const rpeDefault = exConf.rpe || '8';
     if(sets.length > 0) return sets.map((s, i) => renderSetRow(i, s, prev?.sets[i], rpeDefault)).join('');
     let res = '';
-    const setTarget = exConf.sets || 3;
-    for(let i=0; i<setTarget; i++) res += renderSetRow(i, {w:'', r:'', rpe:''}, prev?.sets[i], rpeDefault);
+    for(let i=0; i<(exConf.sets||3); i++) res += renderSetRow(i, {w:'', r:'', rpe:''}, prev?.sets[i], rpeDefault);
     return res;
 }
 
@@ -186,8 +210,8 @@ function renderSetRow(i, s, pS, rpeDefault) {
   const phR = pS ? pS.r : 'tek';
   return `<div class="set-grid">
     <div class="set-num ${s.isDrop?'drop-badge':''}">${s.isDrop?'DS':i+1}</div>
-    <input type="number" class="set-input w-in" placeholder="${phW}" value="${s.w||''}" oninput="save()">
-    <input type="number" class="set-input r-in" placeholder="${phR}" value="${s.r||''}" oninput="save()">
+    <input type="number" inputmode="decimal" class="set-input w-in" placeholder="${phW}" value="${s.w||''}" oninput="save()">
+    <input type="number" inputmode="numeric" class="set-input r-in" placeholder="${phR}" value="${s.r||''}" oninput="save()">
     <select class="set-input rpe-in" onchange="save()">
       ${[10,9.5,9,8.5,8,7.5,7,6].map(v => `<option value="${v}" ${ (s.rpe||rpeDefault) ==v ?'selected':''}>${v}</option>`).join('')}
     </select>
@@ -195,15 +219,7 @@ function renderSetRow(i, s, pS, rpeDefault) {
   </div>`;
 }
 
-function delRow(btn) {
-    const container = btn.closest('.sets-container');
-    btn.parentElement.remove();
-    Array.from(container.querySelectorAll('.set-grid')).forEach((row, idx) => {
-        const badge = row.querySelector('.set-num');
-        if(!badge.classList.contains('drop-badge')) badge.innerText = idx + 1;
-    });
-    save();
-}
+function delRow(btn) { btn.parentElement.remove(); save(); renderExList(); }
 
 function addSet(btn, isDrop) {
   const container = btn.closest('.ex-card').querySelector('.sets-container');
@@ -216,56 +232,63 @@ function save() {
   const dayEx = [];
   document.querySelectorAll('.ex-card').forEach(card => {
     const id = card.dataset.exid;
+    const note = card.querySelector('.ex-note-input').value;
     const sets = Array.from(card.querySelectorAll('.set-grid')).map(row => ({
       w: parseFloat(row.querySelector('.w-in').value),
       r: parseInt(row.querySelector('.r-in').value),
       rpe: row.querySelector('.rpe-in').value,
       isDrop: row.querySelector('.set-num').classList.contains('drop-badge')
     })).filter(s => s.w > 0);
-    if(sets.length) dayEx.push({ id, sets });
+    if(sets.length || note) dayEx.push({ id, sets, note });
   });
   logs = logs.filter(l => l.date !== date);
   if(dayEx.length || date === today()) logs.push({ date, day: curDay, exercises: dayEx });
   localStorage.setItem('wt2_logs', JSON.stringify(logs));
 }
 
-function addCustomExercise() {
-    const name = prompt("Hareket Adı:");
-    if(!name) return;
-    const id = "c_" + Date.now();
-    if(!customExercises[curDay]) customExercises[curDay] = [];
-    customExercises[curDay].push({ id, name, sets:3, rpe:'8', custom:true });
-    localStorage.setItem('wt2_customs', JSON.stringify(customExercises));
-    renderExList();
-}
-
-function delCustomEx(day, id) {
-    if(confirm("Silinsin mi?")) {
-        customExercises[day] = customExercises[day].filter(x => x.id !== id);
-        localStorage.setItem('wt2_customs', JSON.stringify(customExercises));
-        renderExList();
-    }
-}
-
-function renameEx(id) {
-  const n = prompt("Yeni isim:", getExName(id));
-  if(n) { customNames[id] = n; localStorage.setItem('wt2_names', JSON.stringify(customNames)); renderExList(); }
-}
-
 function renderHistory() {
   const f = document.getElementById('hist-feed');
-  if(!logs.length) { f.innerHTML = '<div style="text-align:center; color:var(--muted); padding:40px;">Henüz kayıt yok.</div>'; return; }
-  f.innerHTML = logs.sort((a,b) => b.date.localeCompare(a.date)).map(l => {
-    let vol = 0, sets = 0, best = {n:'', e:0};
-    l.exercises.forEach(e => {
-      e.sets.forEach(s => {
-        vol += (s.w * s.r); sets++;
-        let e1 = calcE1RM(s.w, s.r, s.rpe);
-        if(e1 > best.e) best = {n: getExName(e.id), e: e1};
-      });
-    });
-    return `<div class="chart-container"><div style="display:flex; justify-content:space-between; margin-bottom:12px;"><div style="font-weight:700;">${l.date}</div><div style="color:var(--accent); font-weight:700;">${l.day.toUpperCase()}</div></div><div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; font-size:12px; color:var(--muted); margin-bottom:12px;"><div>📦 ${sets} Set</div><div>⚖️ ${vol} kg</div></div><div style="font-size:13px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.05);"><span style="color:var(--gold)">⭐ En İyi:</span> ${best.n} (${Math.round(best.e)} kg)</div></div>`;
-  }).join('');
+  if(!logs.length) { f.innerHTML = '<div style="text-align:center; color:var(--muted); padding:40px;">Kayıt yok.</div>'; return; }
+  f.innerHTML = logs.sort((a,b) => b.date.localeCompare(a.date)).map(l => `
+    <div class="chart-container" onclick="goToDate('${l.date}')">
+      <div style="display:flex; justify-content:space-between; margin-bottom:12px;"><div style="font-weight:700;">${l.date}</div><div style="color:var(--${l.day}); font-weight:700;">${l.day.toUpperCase()}</div></div>
+      <div style="font-size:12px; color:var(--muted);">${l.exercises.length} Hareket. İncelemek için tıkla.</div>
+    </div>`).join('');
+}
+
+function goToDate(date) { 
+  document.getElementById('log-date').value = date; 
+  onDateChange(); 
+  showPage('log', document.querySelectorAll('.nav-btn')[0]); 
+}
+
+function renderCalendar() {
+  const grid = document.getElementById('cal-grid');
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  
+  const trMonths = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
+  document.getElementById('cal-month-name').innerText = `${trMonths[month]} ${year}`;
+
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const offset = (firstDay === 0 ? 6 : firstDay - 1); 
+
+  grid.innerHTML = ['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'].map(d => `<div class="cal-weekday">${d}</div>`).join('');
+  
+  for(let i=0; i<offset; i++) grid.innerHTML += `<div></div>`;
+  
+  let monthCount = 0;
+  for(let i=1; i<=daysInMonth; i++) {
+    const ds = `${year}-${String(month+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
+    const log = logs.find(l => l.date === ds && l.exercises.length > 0);
+    let cls = '';
+    if(log) { cls = `has-${log.day}`; monthCount++; }
+    grid.innerHTML += `<div class="cal-day ${cls}">${i}</div>`;
+  }
+  document.getElementById('month-total-count').innerText = `${monthCount} Antrenman`;
+  renderProgressList();
 }
 
 function showPage(id, btn) {
@@ -273,7 +296,7 @@ function showPage(id, btn) {
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   document.getElementById(`page-${id}`).classList.add('active');
   btn.classList.add('active');
-  if(id === 'progress') renderProgressList();
+  if(id === 'progress') renderCalendar();
   if(id === 'history') renderHistory();
 }
 
@@ -293,37 +316,37 @@ function renderProgress() {
   document.getElementById('prog-content').innerHTML = `<div class="chart-container"><canvas id="chart"></canvas></div>`;
   if(chart) chart.destroy();
   chart = new Chart(document.getElementById('chart').getContext('2d'), {
-    type: 'bar',
-    data: { labels: data.map(d => d.date.slice(5)), datasets: [{ data: data.map(d => d.val), backgroundColor: data.map(d => d.val === Math.max(...data.map(x=>x.val)) ? '#facc15' : 'rgba(34,211,238,0.2)'), borderRadius: 6 }] },
+    type: 'line',
+    data: { 
+      labels: data.map(d => d.date.slice(5)), 
+      datasets: [{ 
+        data: data.map(d => d.val), 
+        borderColor: '#22d3ee', 
+        backgroundColor: 'rgba(34,211,238,0.1)', 
+        fill: true, 
+        tension: 0.4,
+        pointBackgroundColor: '#22d3ee',
+        pointRadius: 4
+      }] 
+    },
     options: { plugins: { legend: { display: false } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' } }, x: { grid: { display: false } } } }
   });
 }
 
 function openSettings() { document.getElementById('settings-modal').classList.add('open'); }
 function closeSettings() { document.getElementById('settings-modal').classList.remove('open'); }
-
-function exportExcel() {
-    if(logs.length === 0) return alert("Kayıt bulunamadı.");
-    let csv = "\uFEFFTarih;Gün;Hareket;Set No;Agirlik;Tekrar;RPE\n";
-    logs.forEach(l => {
-        l.exercises.forEach(e => {
-            e.sets.forEach((s, idx) => {
-                csv += `${l.date};${l.day};${getExName(e.id)};${idx+1};${s.w};${s.r};${s.rpe}\n`;
-            });
-        });
-    });
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = `Antrenman_Gelisim_${today()}.csv`;
-    link.click();
-}
-
 function exportData() {
   const blob = new Blob([JSON.stringify({ logs, customNames, customExercises })], { type: 'application/json' });
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `VucutKasa_Yedek.json`; a.click();
 }
-
+function exportExcel() {
+    let csv = "\uFEFFTarih;Gun;Hareket;Agirlik;Tekrar;RPE;Not\n";
+    logs.forEach(l => l.exercises.forEach(e => e.sets.forEach(s => {
+        csv += `${l.date};${l.day};${getExName(e.id)};${s.w};${s.r};${s.rpe};${e.note||''}\n`;
+    })));
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `Antrenman_Gelisim.csv`; a.click();
+}
 function importData(e) {
   const reader = new FileReader();
   reader.onload = (ev) => {
@@ -332,7 +355,14 @@ function importData(e) {
   };
   reader.readAsText(e.target.files[0]);
 }
-
+function addCustomExercise() {
+    const n = prompt("Hareket Adı:");
+    if(!n) return;
+    const id = "c_" + Date.now();
+    if(!customExercises[curDay]) customExercises[curDay] = [];
+    customExercises[curDay].push({ id, name:n, sets:3, rpe:'8', custom:true });
+    save(); renderExList();
+}
 function deleteDay() { if(confirm("Günü temizle?")) { const d = document.getElementById('log-date').value; logs = logs.filter(l => l.date !== d); localStorage.setItem('wt2_logs', JSON.stringify(logs)); location.reload(); } }
 
 document.getElementById('log-date').value = today();
