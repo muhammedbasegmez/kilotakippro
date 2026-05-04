@@ -3,485 +3,304 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Vücut & Kasa Pro</title>
-
+<title>Vücut & Kas Pro - Stable</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Antrenman">
 <meta name="theme-color" content="#09090b">
-
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #09090b; --surface: #18181b; --surface2: #27272a; --surface3: #3f3f46;
-  --accent: #22d3ee; --accent2: #06b6d4; --text: #fafafa; --muted: #a1a1aa;
-  --border: rgba(255,255,255,0.06);
-  --push: #38bdf8; --pull: #34d399; --leg: #fbbf24; --upper: #c084fc;
-  --red: #ef4444; --gold: #facc15;
-  --radius: 20px; --font-display: 'Bebas Neue', sans-serif; --font-body: 'DM Sans', sans-serif;
+  --bg: #09090b; --surface: #18181b; --surface2: #27272a; --accent: #22d3ee; --text: #fafafa; --muted: #a1a1aa;
+  --border: rgba(255,255,255,0.06); --push: #38bdf8; --pull: #34d399; --leg: #fbbf24; --upper: #c084fc;
+  --red: #ef4444; --gold: #facc15; --radius: 20px; --font-display: 'Bebas Neue', sans-serif; --font-body: 'DM Sans', sans-serif;
 }
-
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-body { font-family: var(--font-body); background: var(--bg); color: var(--text); min-height: 100vh; max-width: 430px; margin: 0 auto; position: relative; overflow-x: hidden; padding-bottom: 110px; }
-
-/* ---- SETTINGS & NAV ---- */
-.settings-btn { position: absolute; top: 52px; right: 20px; background: var(--surface2); border: 1px solid var(--border); border-radius: 50%; width: 42px; height: 42px; color: var(--text); cursor: pointer; z-index: 10; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: all 0.2s; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
-.settings-btn:active { transform: scale(0.9); }
-.nav { display: flex; justify-content: space-around; align-items: center; background: rgba(15, 15, 18, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-top: 1px solid rgba(255,255,255,0.04); padding: 12px 10px 24px; position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 430px; z-index: 100; }
-.nav-btn { display: flex; flex-direction: column; align-items: center; gap: 6px; background: none; border: none; cursor: pointer; padding: 8px 16px; border-radius: 16px; transition: all 0.3s; }
-.nav-btn:active { transform: scale(0.92); }
-.nav-icon { font-size: 22px; opacity: 0.4; transition: all 0.3s; }
-.nav-label { font-size: 10px; color: var(--muted); font-weight: 600; letter-spacing: 0.04em; transition: all 0.3s; }
-.nav-btn.active .nav-icon { opacity: 1; transform: translateY(-4px); text-shadow: 0 0 16px rgba(34,211,238,0.6); filter: drop-shadow(0 0 4px var(--accent)); }
-.nav-btn.active .nav-label { color: var(--accent); transform: translateY(-2px); }
-
-/* ---- PAGES & CARDS ---- */
-.page { display: none; animation: fadeIn 0.4s ease forwards; opacity: 0; transform: translateY(10px); }
+body { font-family: var(--font-body); background: var(--bg); color: var(--text); min-height: 100vh; max-width: 430px; margin: 0 auto; overflow-x: hidden; padding-bottom: 110px; }
+.settings-btn { position: absolute; top: 52px; right: 20px; background: var(--surface2); border: 1px solid var(--border); border-radius: 50%; width: 42px; height: 42px; color: var(--text); z-index: 10; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+.nav { display: flex; justify-content: space-around; background: rgba(15, 15, 18, 0.85); backdrop-filter: blur(20px); border-top: 1px solid rgba(255,255,255,0.04); padding: 12px 10px 24px; position: fixed; bottom: 0; width: 100%; max-width: 430px; z-index: 100; }
+.nav-btn { display: flex; flex-direction: column; align-items: center; gap: 6px; background: none; border: none; cursor: pointer; opacity: 0.4; transition: 0.3s; }
+.nav-btn.active { opacity: 1; color: var(--accent); }
+.nav-icon { font-size: 22px; }
+.nav-label { font-size: 10px; font-weight: 600; }
+.page { display: none; animation: fadeIn 0.4s ease forwards; }
 .page.active { display: block; }
-@keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
-.page-header { padding: 56px 20px 24px; background: radial-gradient(circle at top right, rgba(34,211,238,0.1), transparent 60%); }
-.header-label { font-size: 11px; color: var(--accent); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 6px; font-weight: 700; }
-.header-title { font-family: var(--font-display); font-size: 46px; color: var(--text); letter-spacing: 0.02em; line-height: 1; text-shadow: 0 4px 12px rgba(0,0,0,0.5); }
-.header-title span { color: var(--muted); }
-
-.ex-card, .hist-card, .stat-card, .chart-card, .week-card { background: linear-gradient(160deg, #1c1c20 0%, #121215 100%); border: 1px solid rgba(255,255,255,0.04); border-radius: var(--radius); box-shadow: 0 12px 32px rgba(0,0,0,0.3); position: relative; overflow: hidden; margin-bottom: 16px; }
-
-/* ---- DAY PILLS & EXERCISES ---- */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.page-header { padding: 56px 20px 24px; }
+.header-title { font-family: var(--font-display); font-size: 46px; color: var(--text); line-height: 1; }
 .day-pills { display: flex; gap: 10px; padding: 0 20px 20px; overflow-x: auto; scrollbar-width: none; }
-.day-pills::-webkit-scrollbar { display: none; }
-.day-pill { flex-shrink: 0; padding: 12px 20px; border-radius: 100px; border: 1px solid var(--border); background: rgba(24,24,27,0.8); color: var(--muted); font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
-.day-pill.active-push { background: rgba(56,189,248,0.15); border-color: var(--push); color: var(--push); transform: translateY(-2px); }
-.day-pill.active-pull { background: rgba(52,211,153,0.15); border-color: var(--pull); color: var(--pull); transform: translateY(-2px); }
-.day-pill.active-leg  { background: rgba(251,191,36,0.15); border-color: var(--leg); color: var(--leg); transform: translateY(-2px); }
-.day-pill.active-upper{ background: rgba(192,132,252,0.15); border-color: var(--upper);color: var(--upper); transform: translateY(-2px); }
-
-.ex-list { padding: 0 16px; }
+.day-pill { flex-shrink: 0; padding: 12px 20px; border-radius: 100px; border: 1px solid var(--border); background: rgba(24,24,27,0.8); color: var(--muted); font-size: 13px; font-weight: 600; }
+.day-pill.active-push { border-color: var(--push); color: var(--push); }
+.day-pill.active-pull { border-color: var(--pull); color: var(--pull); }
+.day-pill.active-leg  { border-color: var(--leg); color: var(--leg); }
+.day-pill.active-upper { border-color: var(--upper); color: var(--upper); }
+.ex-card { background: linear-gradient(160deg, #1c1c20 0%, #121215 100%); border: 1px solid rgba(255,255,255,0.04); border-radius: var(--radius); margin: 0 16px 16px; overflow: hidden; }
 .ex-top { padding: 18px 16px 10px; display: flex; align-items: center; justify-content: space-between; }
-.ex-name { font-size: 16px; font-weight: 700; color: var(--text); display:flex; align-items:center; gap:8px;}
-.edit-icon { font-size:14px; color:var(--muted); cursor:pointer; background:rgba(255,255,255,0.05); padding:4px 6px; border-radius:6px; transition:0.2s; }
-.edit-icon:active { background:var(--accent); color:#000; }
-.ex-meta { font-size: 12px; color: var(--muted); margin-top: 6px; font-weight: 500; }
-
-.set-grid-header { display: grid; grid-template-columns: 28px 1fr 1fr 65px; gap: 6px; padding: 0 12px 10px; font-size: 10px; color: var(--muted); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
-.set-row-grid { display: grid; grid-template-columns: 28px 1fr 1fr 65px; gap: 6px; padding: 6px 12px; align-items: center; }
-.set-num-badge { width: 28px; height: 28px; border-radius: 8px; background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--muted); border: 1px solid var(--border); }
-
-/* Drop Set Style */
+.ex-name { font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+.overload-card { margin: 0 16px 10px; padding: 10px; background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.2); border-radius: 10px; font-size: 12px; font-weight: 700; color: var(--pull); display: flex; align-items: center; gap: 6px; }
+.target-card { margin: 0 16px 10px; padding: 10px; background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.1); border-radius: 10px; font-size: 12px; font-weight: 600; color: var(--muted); }
+.set-grid { display: grid; grid-template-columns: 32px 1fr 1fr 65px 30px; gap: 8px; padding: 6px 16px; align-items: center; }
+.set-num { width: 32px; height: 32px; border-radius: 8px; background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; border: 1px solid var(--border); }
 .drop-badge { background: rgba(239, 68, 68, 0.15); color: #ef4444; border-color: rgba(239, 68, 68, 0.3); }
-.btn-drop-set { background: none; border: 1px dashed rgba(255,255,255,0.1); color: var(--muted); padding: 8px; border-radius: 10px; font-size: 11px; font-weight: 700; width: calc(100% - 24px); margin: 6px 12px 12px; cursor: pointer; transition: 0.2s; }
-.btn-drop-set:active { background: rgba(239, 68, 68, 0.1); border-color: #ef4444; color: #ef4444; }
-
-/* Progressive Overload Style */
-.overload-card { margin: 0 16px 8px; padding: 8px 12px; background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.3); border-radius: 8px; font-size: 11px; font-weight: 700; color: var(--pull); display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 10px rgba(52,211,153,0.1); animation: fadeIn 0.3s; }
-.target-card { margin: 0 16px 8px; padding: 8px 12px; background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.1); border-radius: 8px; font-size: 11px; font-weight: 600; color: var(--muted); animation: fadeIn 0.3s;}
-
-/* ---- INPUTS & BUTTONS ---- */
-input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-input[type=number] { -moz-appearance: textfield; }
-.check-input, .set-input, .rpe-sel { width: 100%; min-width: 0; background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-family: var(--font-body); font-size: 15px; font-weight: 600; padding: 12px 14px; outline: none; -webkit-appearance: none; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); transition: border-color 0.2s; color-scheme: dark; }
-.check-input:focus, .set-input:focus, .rpe-sel:focus { border-color: var(--accent); box-shadow: 0 0 12px rgba(34,211,238,0.15); }
-.set-input, .rpe-sel { padding: 10px 4px; text-align: center; font-size: 14px;}
-.set-input::placeholder { color: rgba(255,255,255,0.15); font-weight: 500; font-size: 13px; font-style: italic; }
-
-.ex-note-input { width: 100%; background: rgba(0,0,0,0.15); border: none; border-top: 1px solid rgba(255,255,255,0.02); color: var(--accent); font-family: var(--font-body); font-size: 13px; font-weight: 500; padding: 14px 16px; outline: none; transition: background 0.2s; margin-top: 4px; }
-.date-row input[type=date] { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; color: var(--text); font-family: var(--font-body); font-size: 15px; font-weight: 600; padding: 14px; outline: none; -webkit-appearance: none; color-scheme: dark; text-align: center; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); margin-bottom: 16px;}
-
-.btn-primary { width: 100%; background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%); color: #000; border: none; border-radius: 16px; font-family: var(--font-display); font-size: 22px; letter-spacing: 0.05em; padding: 16px; cursor: pointer; transition: all 0.2s; box-shadow: 0 8px 24px rgba(34,211,238,0.3); }
-.btn-primary:active { transform: scale(0.96); box-shadow: 0 4px 12px rgba(34,211,238,0.2); }
-.btn-secondary { width: 100%; background: var(--surface2); color: var(--text); border: 1px solid var(--border); border-radius: 16px; font-family: var(--font-body); font-size: 15px; font-weight: 600; padding: 16px; cursor: pointer; transition: all 0.2s; text-align: center; display: block; }
-
-/* ---- OTHERS (HEATMAP, CALENDAR, MODALS) ---- */
-.heatmap-container { padding: 20px 16px; display: flex; justify-content: center; position: relative; }
-.heatmap-svg { width: 100%; max-width: 220px; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5)); }
-.hm-part { fill: #27272a; transition: all 0.5s ease; stroke: #18181b; stroke-width: 2; }
-.section-title { padding: 0 16px 12px; font-size: 16px; font-weight: 700; color: var(--text); letter-spacing: 0.02em; }
-.hof-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 16px 24px; }
-.hof-card { background: linear-gradient(135deg, rgba(250,204,21,0.1) 0%, rgba(0,0,0,0.4) 100%); border: 1px solid rgba(250,204,21,0.2); border-radius: 16px; padding: 16px; position: relative; overflow: hidden; }
-.hof-title { font-size: 12px; font-weight: 700; color: var(--muted); margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.hof-val { font-family: var(--font-display); font-size: 32px; color: var(--gold); }
-.chart-wrap { position: relative; height: 160px; margin-bottom: 16px; }
-
-.modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); z-index: 300; align-items: flex-end; justify-content: center; }
-.modal-backdrop.open { display: flex; animation: fadeIn 0.2s ease; }
-.modal-sheet { background: var(--surface); border-radius: 28px 28px 0 0; border-top: 1px solid rgba(255,255,255,0.05); padding: 24px 20px 40px; width: 100%; max-width: 430px; animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); max-height: 85vh; overflow-y: auto;}
-@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-
-.toast { position: fixed; bottom: 110px; left: 50%; transform: translateX(-50%) translateY(20px); background: rgba(24,24,27,0.95); backdrop-filter: blur(10px); border: 1px solid var(--accent); color: var(--accent); font-size: 14px; font-weight: 600; padding: 14px 24px; border-radius: 100px; opacity: 0; transition: all 0.3s; z-index: 200; pointer-events: none; }
+.set-input { width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: 10px; color: #fff; padding: 10px 4px; text-align: center; font-size: 14px; font-weight: 600; outline: none; }
+.del-set { color: var(--red); font-size: 18px; cursor: pointer; opacity: 0.5; text-align: center; }
+.btn-action { background: none; border: 1px dashed rgba(255,255,255,0.1); color: var(--muted); padding: 10px; border-radius: 12px; font-size: 11px; font-weight: 700; width: calc(100% - 32px); margin: 4px 16px 14px; cursor: pointer; }
+.chart-container { background: #121215; border-radius: var(--radius); padding: 16px; margin-bottom: 20px; border: 1px solid var(--border); }
+.modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 300; align-items: flex-end; }
+.modal-backdrop.open { display: flex; }
+.modal-sheet { background: var(--surface); border-radius: 28px 28px 0 0; padding: 24px 20px 40px; width: 100%; max-width: 430px; margin: 0 auto; }
+.toast { position: fixed; bottom: 110px; left: 50%; transform: translateX(-50%) translateY(20px); background: #18181b; border: 1px solid var(--accent); color: var(--accent); padding: 12px 24px; border-radius: 100px; font-size: 13px; font-weight: 600; opacity: 0; transition: 0.3s; z-index: 400; }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 </head>
 <body>
 
 <button class="settings-btn" onclick="openSettings()">🛡️</button>
 <div class="toast" id="toast"></div>
 
-<!-- PAGE: LOG (ANTRENMAN) -->
+<!-- ANTRENMAN -->
 <div class="page active" id="page-log">
-  <div class="page-header">
-    <div class="header-label">Antrenman Asistanı</div>
-    <div class="header-title">AĞIRLIK <span>TAKİP</span></div>
+  <div class="page-header"><div class="header-title">ANTRENMAN <span>GÜNLÜĞÜ</span></div></div>
+  <div class="day-pills">
+    <button class="day-pill" data-day="push" onclick="selectDay('push')">İtiş (Pzt)</button>
+    <button class="day-pill" data-day="pull" onclick="selectDay('pull')">Çekiş (Sal)</button>
+    <button class="day-pill" data-day="leg" onclick="selectDay('leg')">Bacak (Per)</button>
+    <button class="day-pill" data-day="upper" onclick="selectDay('upper')">Upper (Cmt)</button>
   </div>
-
-  <div class="day-pills" id="day-pills">
-    <button class="day-pill" data-day="push" onclick="selectDay('push')">Pzt — İtiş</button>
-    <button class="day-pill" data-day="pull" onclick="selectDay('pull')">Sal — Çekiş</button>
-    <button class="day-pill" data-day="leg" onclick="selectDay('leg')">Per — Bacak</button>
-    <button class="day-pill" data-day="upper" onclick="selectDay('upper')">Cmt — Upper</button>
-  </div>
-
-  <div class="date-row" style="padding:0 20px;"><input type="date" id="log-date" onchange="onDateChange()" /></div>
-  <div class="ex-list" id="ex-list"></div>
-
-  <div style="padding:12px 16px 8px;display:flex;gap:8px">
-    <button style="flex:1;height:56px;border-radius:var(--radius);border:2px dashed rgba(255,255,255,0.1);background:rgba(255,255,255,0.02);color:var(--text);font-family:var(--font-body);font-size:15px;font-weight:700;cursor:pointer;" onclick="addCustomExercise()">+ YENİ HAREKET EKLE</button>
-  </div>
-
-  <div style="text-align:center; padding:16px 20px;">
-    <span style="font-size:13px;color:var(--muted);font-weight:500;" id="save-status">Veriler güvenle kaydediliyor.</span>
-  </div>
+  <div style="padding:0 20px 16px;"><input type="date" id="log-date" class="set-input" style="padding:14px; font-size:16px;" onchange="onDateChange()" /></div>
+  <div id="ex-list"></div>
 </div>
 
-<!-- PAGE: PROGRESS -->
-<div class="page" id="page-progress">
-  <div class="page-header"><div class="header-label">Gelişim & Analiz</div><div class="header-title">İLER<span>LEME</span></div></div>
-  <div class="section-title">🏆 Rekorlar Vitrini (Hall of Fame)</div>
-  <div class="hof-grid" id="hof-grid"></div>
-  <div class="section-title" style="margin-top:24px;">📈 Harekete Özel Grafik</div>
-  <div style="padding: 0 16px;"><select class="check-input" id="prog-ex-sel" onchange="renderExerciseProgress()" style="width:100%; margin-bottom:16px;"></select></div>
-  <div id="prog-charts" style="padding: 0 16px 20px;"></div>
-</div>
-
-<!-- PAGE: HISTORY -->
+<!-- GEÇMİŞ -->
 <div class="page" id="page-history">
-  <div class="page-header"><div class="header-label">Antrenman Akışı</div><div class="header-title">GEÇ<span>MİŞ</span></div></div>
-  <div id="strava-feed" style="padding: 0 16px;"></div>
+  <div class="page-header"><div class="header-title">GEÇ<span>MİŞ</span></div></div>
+  <div id="hist-feed" style="padding:0 16px;"></div>
 </div>
 
-<!-- MODALS -->
-<div class="modal-backdrop" id="settings-modal">
-  <div class="modal-sheet">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;"><div style="font-size:20px; font-weight:700;">Veri Kasası 🛡️</div><button onclick="closeSettings()" style="background:none;border:none;color:var(--text);font-size:20px;cursor:pointer;">✕</button></div>
-    <div style="display:flex;flex-direction:column;gap:12px">
-      <button class="btn-primary" onclick="exportData()" style="font-size:18px;">📥 Yedekle (.json)</button>
-      <label class="btn-secondary">📤 Yedeği Yükle <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)"></label>
-    </div>
-    
-    <div style="margin-top:24px; padding-top:16px; border-top:1px solid rgba(255,255,255,0.05);">
-      <div style="font-size:12px; color:var(--muted); font-weight:700; margin-bottom:8px;">Tehlikeli İşlemler</div>
-      <button class="btn-secondary" style="color:var(--red); border-color:rgba(239, 68, 68, 0.3);" onclick="deleteCurrentLog()">🗑️ Ekranda Açık Olan Günü Temizle</button>
-    </div>
-  </div>
+<!-- REKORLAR -->
+<div class="page" id="page-progress">
+  <div class="page-header"><div class="header-title">İLER<span>LEME</span></div></div>
+  <div style="padding:0 16px;"><select class="set-input" id="prog-ex-sel" onchange="renderProgress()" style="margin-bottom:20px;"></select></div>
+  <div id="prog-content" style="padding:0 16px;"></div>
 </div>
 
 <nav class="nav">
-  <button class="nav-btn active" onclick="showPage('log',this)"><span class="nav-icon">🏋️</span><span class="nav-label">ANTRENMAN</span></button>
+  <button class="nav-btn active" onclick="showPage('log',this)"><span class="nav-icon">🏋️</span><span class="nav-label">GÜNLÜK</span></button>
   <button class="nav-btn" onclick="showPage('history',this)"><span class="nav-icon">📅</span><span class="nav-label">GEÇMİŞ</span></button>
-  <button class="nav-btn" onclick="showPage('progress',this)"><span class="nav-icon">🏆</span><span class="nav-label">İLERLEME</span></button>
+  <button class="nav-btn" onclick="showPage('progress',this)"><span class="nav-icon">🏆</span><span class="nav-label">REKORLAR</span></button>
 </nav>
 
-<script>
-// ==========================================
-// 1. DATA & DEFAULTS
-// ==========================================
-const EX_DB = [
-  // İTİŞ GÜNÜ VARYASYONLARI (Kablo / Halat)
-  { id:'clr', name:'Cable / DB Lateral Raise', m:['shoulders'] },
-  { id:'trp', name:'Triceps Rope Pushdown', m:['triceps'] },
-  
-  // UPPER GÜNÜ VARYASYONLARI (Dambıl / Düz Bar)
-  { id:'dlr', name:'Dumbbell Lateral Raise', m:['shoulders'] },
-  { id:'tpd', name:'Triceps Pushdown (Düz/V-Bar)', m:['triceps'] },
+<div class="modal-backdrop" id="settings-modal" onclick="if(event.target===this)closeSettings()">
+  <div class="modal-sheet">
+    <div style="margin-bottom:20px; font-weight:700;">Ayarlar 🛡️</div>
+    <button class="set-input" onclick="exportData()" style="background:var(--accent); color:#000; margin-bottom:12px;">📥 Verileri Yedekle</button>
+    <label class="set-input" style="display:block; cursor:pointer;">📤 Yedeği Yükle <input type="file" style="display:none" onchange="importData(event)"></label>
+    <button class="set-input" style="color:var(--red); border-color:var(--red); margin-top:20px;" onclick="deleteDay()">🗑️ Günü Temizle</button>
+  </div>
+</div>
 
-  // DİĞER ESKİ HAREKETLER (Geçmiş silinmemesi için korundu)
-  { id:'dip', name:'Incline Dumbbell Press', m:['chest', 'shoulders', 'triceps'] },
-  { id:'mcp', name:'Machine Chest Press', m:['chest', 'triceps'] },
-  { id:'lsp', name:'Landmine Shoulder Press', m:['shoulders', 'chest'] },
-  { id:'csm', name:'Chest-Supported Machine Row', m:['back', 'biceps'] },
-  { id:'ngl', name:'Neutral Grip Lat Pulldown', m:['back', 'biceps'] },
-  { id:'fpu', name:'Face Pull', m:['shoulders', 'back'] },
-  { id:'idc', name:'Incline DB Biceps Curl', m:['biceps'] },
-  { id:'ham', name:'Hammer Curl', m:['biceps'] },
-  { id:'lpr', name:'Leg Press', m:['legs'] },
-  { id:'gob', name:'Goblet Squat', m:['legs', 'core'] },
-  { id:'llc', name:'Lying Leg Curl', m:['legs', 'calves'] },
-  { id:'scr', name:'Seated Calf Raise', m:['calves'] },
-  { id:'pal', name:'Pallof Press', m:['core'] },
-  { id:'pdf', name:'Pec Deck Fly', m:['chest'] },
-  { id:'csm2', name:'CS Machine Row', m:['back', 'biceps'] },
-  { id:'rpd', name:'Reverse Pec Deck Fly', m:['shoulders', 'back'] },
-  { id:'ss_curl', name:'DB Biceps Curl', m:['biceps'] },
-  { id:'ss_push', name:'Triceps Pushdown', m:['triceps'] },
-  
-  // YENİ EKLENEN PROGRAM HAREKETLERİ
-  { id:'msp', name:'Machine Shoulder Press', m:['shoulders'] },
-  { id:'ote', name:'Overhead Triceps Extension', m:['triceps'] },
-  { id:'latp', name:'Lat Pulldown (Geniş Tutuş)', m:['back', 'biceps'] },
-  { id:'adc', name:'Alternating DB Biceps Curl', m:['biceps'] },
-  { id:'shc', name:'Seated DB Hammer Curl', m:['biceps'] },
-  { id:'bss', name:'Bulgarian Split Squat', m:['legs'] },
-  { id:'lex', name:'Leg Extension', m:['legs'] },
-  { id:'slc', name:'Seated Leg Curl', m:['legs'] },
-  { id:'lpc', name:'Calf Raise (Leg Press)', m:['calves'] },
-  { id:'imp', name:'Incline Machine Press', m:['chest', 'shoulders', 'triceps'] },
-  { id:'scr_row', name:'Seated Cable Row', m:['back', 'biceps'] },
-  { id:'mpc', name:'Machine Preacher Curl', m:['biceps'] }
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script>
+// ID'ler Sabit, İsimler Değişebilir
+const EX_DB = [
+  { id:'idp', name:'Incline DB Press' }, { id:'mcp', name:'Machine Chest Press' }, { id:'msp', name:'Machine Shoulder Press' },
+  { id:'clr', name:'Cable Lateral Raise' }, { id:'trp', name:'Triceps Rope Pushdown' }, { id:'csm', name:'Chest-Supported Row' },
+  { id:'latp', name:'Lat Pulldown' }, { id:'fp', name:'Face Pull' }, { id:'ibc', name:'Incline DB Curl' },
+  { id:'shc', name:'Seated Hammer Curl' }, { id:'lpr', name:'Leg Press' }, { id:'bss', name:'Bulgarian Split Squat' },
+  { id:'lex', name:'Leg Extension' }, { id:'slc', name:'Seated Leg Curl' }, { id:'lpc', name:'Calf Raise' },
+  { id:'pal', name:'Pallof Press' }, { id:'pdf', name:'Pec Deck Fly' }, { id:'latv', name:'Lat Pulldown (V)' },
+  { id:'scr', name:'Seated Cable Row' }, { id:'dlr', name:'DB Lateral Raise' }, { id:'rpd', name:'Reverse Pec Deck' },
+  { id:'mpc', name:'Preacher Curl' }, { id:'tpd', name:'Triceps Pushdown' }
 ];
 
-// DİKKAT: İtiş günü "clr" ve "trp" kullanıyor. Upper günü "dlr" ve "tpd" kullanıyor. Rekorlar ayrıldı!
 const DAYS = {
-  push: { label: 'İtiş', cls: 'push', exercises: [{id:'dip', sets:3, reps:'8-10', rpe:'8'},{id:'mcp', sets:3, reps:'10-12', rpe:'8.5'},{id:'msp', sets:3, reps:'8-12', rpe:'8'},{id:'clr', sets:3, reps:'12-15', rpe:'8.5'},{id:'trp', sets:3, reps:'10-12', rpe:'8.5'}, {id:'ote', sets:3, reps:'12-15', rpe:'8.5'}] },
-  pull: { label: 'Çekiş', cls: 'pull', exercises: [{id:'csm', sets:3, reps:'8-10', rpe:'8'},{id:'latp', sets:3, reps:'10-12', rpe:'8'},{id:'rpd', sets:3, reps:'12-15', rpe:'8.5'},{id:'adc', sets:3, reps:'8-10', rpe:'8.5'},{id:'shc', sets:3, reps:'8-12', rpe:'8.5'}] },
-  leg: { label: 'Bacak', cls: 'leg', exercises: [{id:'lpr', sets:3, reps:'8-12', rpe:'8.5'},{id:'bss', sets:3, reps:'8-10', rpe:'8'},{id:'lex', sets:3, reps:'12-15', rpe:'9'},{id:'slc', sets:3, reps:'10-12', rpe:'9'},{id:'lpc', sets:3, reps:'15-20', rpe:'9'}] },
-  upper: { label: 'Upper', cls: 'upper', exercises: [{id:'imp', sets:3, reps:'8-10', rpe:'8'},{id:'scr_row', sets:3, reps:'10-12', rpe:'8'},{id:'dlr', sets:3, reps:'12-15', rpe:'8.5'},{id:'mpc', sets:3, reps:'10-12', rpe:'9'},{id:'tpd', sets:3, reps:'10-12', rpe:'8.5'}, {id:'pal', sets:3, reps:'12-15', rpe:'8'}] }
+  push: ['idp', 'mcp', 'msp', 'clr', 'trp'], pull: ['csm', 'latp', 'fp', 'ibc', 'shc'],
+  leg: ['lpr', 'bss', 'lex', 'slc', 'lpc', 'pal'], upper: ['pdf', 'latv', 'scr', 'dlr', 'rpd', 'mpc', 'tpd']
 };
 
-let logs = [], customNames = {}, customExercises = {};
-try { logs = JSON.parse(localStorage.getItem('wt2_logs')||'[]'); } catch(e){}
-try { customNames = JSON.parse(localStorage.getItem('wt2_names')||'{}'); } catch(e){}
-try { customExercises = JSON.parse(localStorage.getItem('wt2_customs')||'{}'); } catch(e){}
-
-function today() { const d = new Date(); d.setMinutes(d.getMinutes() - d.getTimezoneOffset()); return d.toISOString().split('T')[0]; }
-function calcE1RM(w, r, rpeStr) { if(!w || !r) return 0; let rpe = parseFloat(rpeStr); if(isNaN(rpe) || rpe < 1 || rpe > 10) rpe = 10; return w * (1 + 0.0333 * (r + (10 - rpe))); }
-function getDayExercises(dayKey) { let base = DAYS[dayKey].exercises.map(e => { let dbInfo = EX_DB.find(x => x.id === e.id); return {...e, name: dbInfo ? dbInfo.name : e.id}; }); return [...base, ...(customExercises[dayKey] || [])]; }
-function getExName(exId, fallback) { return customNames[exId] || fallback; }
-
-function getPreviousSessionData(exId, currentDate) {
-  const sorted = [...logs].sort((a,b) => new Date(b.date) - new Date(a.date));
-  for (let log of sorted) { if (log.date >= currentDate) continue; let ex = log.exercises.find(e => e.id === exId); if (ex) return ex; } return null;
-}
-
+let logs = JSON.parse(localStorage.getItem('wt_logs') || '[]');
+let customNames = JSON.parse(localStorage.getItem('wt_names') || '{}');
 let curDay = 'push';
 
-// ==========================================
-// ANTRENMAN (LOG) GÜNLÜĞÜ
-// ==========================================
+function today() { return new Date().toLocaleDateString('sv'); }
+function calcE1RM(w, r, rpe) { return w * (1 + 0.0333 * (r + (10 - (parseFloat(rpe)||10)))); }
+function getExName(id) { return customNames[id] || EX_DB.find(x => x.id === id)?.name || id; }
+
 function onDateChange() {
   const date = document.getElementById('log-date').value;
-  const existingLog = logs.find(l => l.date === date);
-  if (existingLog) curDay = existingLog.day;
-  updateDayPillsUI(); renderExList();
+  const existing = logs.find(x => x.date === date);
+  if(existing) curDay = existing.day;
+  renderExList();
 }
-document.getElementById('log-date').value = today(); onDateChange();
 
-function updateDayPillsUI() { document.querySelectorAll('.day-pill').forEach(p => { p.className = 'day-pill'; if (p.getAttribute('data-day') === curDay) p.classList.add('active-' + curDay); }); }
-function selectDay(day) { curDay = day; updateDayPillsUI(); renderExList(); }
-
-function renameExercise(id) {
-  const defaultName = EX_DB.find(x=>x.id===id)?.name || id;
-  const currentName = getExName(id, defaultName);
-  const newName = prompt("Hareketin adını değiştirin (Sıfırlamak için boş bırakın):", currentName);
-  if(newName !== null) {
-      if(newName.trim() === '') delete customNames[id];
-      else customNames[id] = newName.trim();
-      localStorage.setItem('wt2_names', JSON.stringify(customNames));
-      renderExList();
-  }
+function selectDay(day) {
+  curDay = day;
+  save(); // Gün değişimini kaydet
+  renderExList();
 }
 
 function renderExList() {
   const date = document.getElementById('log-date').value;
-  const existingLog = logs.find(l => l.date === date);
-  let savedExMap = {};
-  if (existingLog && existingLog.day === curDay) { existingLog.exercises.forEach(e => { savedExMap[e.id] = { sets: e.sets, note: e.note || '' }; }); }
-
-  const exercises = getDayExercises(curDay);
-  let html = '';
-
-  for(let ex of exercises) {
-    const displayName = getExName(ex.id, ex.name);
-    const savedData = savedExMap[ex.id] || { sets: [], note: null };
-    const prevData = getPreviousSessionData(ex.id, date);
-    const noteVal = savedData.note !== null ? savedData.note : (prevData ? prevData.note : '');
-    
-    let numSets = Math.max(ex.sets, savedData.sets.length);
-
-    let rowsHtml = `<div id="${ex.id}-sets">`;
-    for(let i=0; i<numSets; i++) {
-      const s = savedData.sets[i] || {w:'', r:'', rpe:''};
-      const isDrop = s.isDrop;
-      const rpeVal = s.rpe ? s.rpe : (ex.rpe || '');
-      const prevSet = prevData && prevData.sets[i] ? prevData.sets[i] : null;
-      const phW = prevSet && prevSet.w ? prevSet.w : 'kg';
-      const phR = prevSet && prevSet.r ? prevSet.r : 'tek';
-
-      rowsHtml += `
-      <div class="set-row-grid" data-isdrop="${isDrop ? 'true' : 'false'}">
-        <div class="set-num-badge ${isDrop ? 'drop-badge' : ''}">${isDrop ? 'DS' : (i+1)}</div>
-        <input class="set-input w-input" type="number" inputmode="decimal" step="0.5" min="0" placeholder="${phW}" value="${s.w||''}" oninput="debouncedSave()">
-        <input class="set-input r-input" type="number" inputmode="numeric" min="1" placeholder="${phR}" value="${s.r||''}" oninput="debouncedSave()">
-        <select class="rpe-sel rpe-input" onchange="debouncedSave()">
-          <option value="">RPE</option>${[6,7,7.5,8,8.5,9,9.5,10].map(r=>`<option value="${r}" ${rpeVal==r?'selected':''}>${r}</option>`).join('')}
-        </select>
-      </div>`;
-    }
-    rowsHtml += `</div>`;
-
-    const deleteBtn = ex.custom ? `<button class="edit-icon" style="color:var(--red)" onclick="removeCustomEx('${curDay}','${ex.id}')">🗑</button>` : '';
-
-    html += `
-      <div class="ex-card">
-        <div class="ex-top">
-          <div style="min-width:0;flex:1">
-            <div class="ex-name">${displayName} <span class="edit-icon" onclick="renameExercise('${ex.id}')">✏️</span></div>
-            <div class="ex-meta">${ex.sets} set · ${ex.reps} tek</div>
-          </div>
-          ${deleteBtn}
-        </div>
-        
-        <div id="${ex.id}-tracker"></div>
-
-        <div class="set-grid-header"><div></div><div>Ağırlık</div><div>Tekrar</div><div>Zorluk</div></div>
-        ${rowsHtml}
-        <button class="btn-drop-set" onclick="addDropSetRow('${ex.id}')">+ Drop Set Ekle</button>
-        <input type="text" class="ex-note-input" id="${ex.id}-note" placeholder="Makine ayarı, hissiyat..." value="${noteVal}" oninput="debouncedSave()">
-      </div>
-    `;
-  }
-  document.getElementById('ex-list').innerHTML = html;
-  autoSaveLog();
-}
-
-function addDropSetRow(exId) {
-    debouncedSave();
-    const container = document.getElementById(`${exId}-sets`);
-    const newRow = document.createElement('div');
-    newRow.className = 'set-row-grid';
-    newRow.setAttribute('data-isdrop', 'true');
-    newRow.innerHTML = `
-        <div class="set-num-badge drop-badge">DS</div>
-        <input class="set-input w-input" type="number" inputmode="decimal" step="0.5" min="0" placeholder="kg" oninput="debouncedSave()">
-        <input class="set-input r-input" type="number" inputmode="numeric" min="1" placeholder="tek" oninput="debouncedSave()">
-        <select class="rpe-sel rpe-input" onchange="debouncedSave()">
-          <option value="">RPE</option><option value="6">6</option><option value="7">7</option><option value="7.5">7.5</option><option value="8">8</option><option value="8.5">8.5</option><option value="9">9</option><option value="9.5">9.5</option><option value="10">10</option>
-        </select>
-    `;
-    container.appendChild(newRow);
-}
-
-let saveTimer;
-function debouncedSave() { clearTimeout(saveTimer); saveTimer = setTimeout(autoSaveLog, 500); }
-
-function autoSaveLog() {
-  const date = document.getElementById('log-date').value;
+  const existing = logs.find(x => x.date === date) || { day: curDay, exercises: [] };
+  const displayDay = existing.day || curDay;
+  const exercises = DAYS[displayDay];
   
-  const exercises = getDayExercises(curDay).map(ex => {
-    const note = document.getElementById(`${ex.id}-note`)?.value || '';
-    const setContainer = document.getElementById(`${ex.id}-sets`);
-    if(!setContainer) return null;
-
-    const sets = Array.from(setContainer.querySelectorAll('.set-row-grid')).map(row => {
-        return {
-            w: parseFloat(row.querySelector('.w-input').value)||0,
-            r: parseInt(row.querySelector('.r-input').value)||0,
-            rpe: row.querySelector('.rpe-input').value||'',
-            isDrop: row.getAttribute('data-isdrop') === 'true'
-        };
-    }).filter(s => s.w>0 || s.r>0 || s.isDrop);
-
-    const prevData = getPreviousSessionData(ex.id, date);
-    let prevBestE1rm = 0; let prevBestStr = '';
-    if(prevData) {
-        let bestP = prevData.sets.reduce((b, s) => calcE1RM(s.w, s.r, s.rpe) > b.e ? {w:s.w, r:s.r, e:calcE1RM(s.w,s.r,s.rpe)} : b, {w:0,r:0,e:0});
-        prevBestE1rm = bestP.e; prevBestStr = `${bestP.w}kg × ${bestP.r}`;
-    }
-    
-    let currentBestE1rm = 0;
-    sets.forEach(s => { let e = calcE1RM(s.w, s.r, s.rpe); if(e > currentBestE1rm) currentBestE1rm = e; });
-
-    const trackerDiv = document.getElementById(`${ex.id}-tracker`);
-    if(trackerDiv) {
-        if(prevBestE1rm > 0 && currentBestE1rm > prevBestE1rm) {
-            trackerDiv.innerHTML = `<div class="overload-card">🚀 PROGRESSIVE OVERLOAD! (Yeni PR)</div>`;
-        } else if (prevBestE1rm > 0) {
-            trackerDiv.innerHTML = `<div class="target-card">🎯 Hedefi Geç: ${prevBestStr}</div>`;
-        } else {
-            trackerDiv.innerHTML = '';
-        }
-    }
-
-    return {id: ex.id, name: getExName(ex.id, ex.name), sets, note};
-  }).filter(e => e && (e.sets.length > 0 || e.note !== '')); 
-
-  if (exercises.length === 0) {
-    let prevLen = logs.length;
-    logs = logs.filter(l => l.date !== date);
-    if(logs.length < prevLen) { localStorage.setItem('wt2_logs', JSON.stringify(logs)); if(document.getElementById('page-history').classList.contains('active')) renderHistory(); }
-    return; 
-  }
-
-  logs = logs.filter(l => l.date !== date);
-  logs.unshift({date, day: curDay, dayLabel: DAYS[curDay].label, exercises});
-  logs.sort((a,b) => new Date(b.date) - new Date(a.date));
-  localStorage.setItem('wt2_logs', JSON.stringify(logs));
-
-  const statusEl = document.getElementById('save-status');
-  if(statusEl) { statusEl.innerHTML = '<span style="color:var(--pull)">✓ Kaydedildi</span>'; setTimeout(() => { statusEl.innerHTML = 'Veriler güvenle kaydediliyor.'; }, 2000); }
-}
-
-function deleteCurrentLog() { 
-    const date = document.getElementById('log-date').value; 
-    if(confirm(`${date} antrenmanını tamamen silmek istediğine emin misin?`)) { 
-        logs = logs.filter(l => l.date !== date); 
-        localStorage.setItem('wt2_logs', JSON.stringify(logs)); 
-        renderExList(); 
-        closeSettings();
-        showToast('Gün temizlendi.'); 
-    } 
-}
-
-function addCustomExercise() { const name = prompt('Yeni hareketin adını girin:'); if(!name || !name.trim()) return; const id = 'custom_' + Date.now(); if(!customExercises[curDay]) customExercises[curDay] = []; customExercises[curDay].push({id, name: name.trim(), sets: 3, reps: '10-12', rpe: '8', custom: true}); localStorage.setItem('wt2_customs', JSON.stringify(customExercises)); renderExList(); }
-function removeCustomEx(day, id) { if(confirm('Bu hareketi silmek istiyor musun?')) { if(customExercises[day]) { customExercises[day] = customExercises[day].filter(e => e.id !== id); localStorage.setItem('wt2_customs', JSON.stringify(customExercises)); renderExList(); } } }
-
-// ==========================================
-// OTHER FUNCTIONS (HISTORY, PROGRESS, EXPORT)
-// ==========================================
-function renderHistory() {
-  const feedEl = document.getElementById('strava-feed');
-  if(!logs.length) { feedEl.innerHTML = '<div class="empty-state" style="text-align:center;color:var(--muted);margin-top:40px;">Henüz antrenman yok.</div>'; return; }
   let html = '';
-  logs.slice(0, 15).forEach(log => {
-    let vol = 0; log.exercises.forEach(e => e.sets.forEach(s => vol += (s.w * s.r)));
-    html += `<div class="hist-card" style="padding:16px; margin-bottom:12px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <div style="font-size:16px;font-weight:700;color:var(--${log.day})">${log.dayLabel.toUpperCase()}</div>
-        <div style="font-size:12px;color:var(--muted)">${log.date}</div>
+  exercises.forEach(id => {
+    const data = existing.exercises.find(e => e.id === id) || { sets: [] };
+    const prev = [...logs].sort((a,b) => b.date.localeCompare(a.date)).find(l => l.date < date && l.exercises.some(e => e.id === id))?.exercises.find(e => e.id === id);
+
+    let radar = '';
+    if(prev) {
+      const bestPrev = prev.sets.reduce((a,s) => Math.max(a, calcE1RM(s.w, s.r, s.rpe)), 0);
+      const currentBest = data.sets.reduce((a,s) => Math.max(a, calcE1RM(s.w, s.r, s.rpe)), 0);
+      if(currentBest > bestPrev) radar = `<div class="overload-card">🚀 PROGRESSIVE OVERLOAD!</div>`;
+      else radar = `<div class="target-card">🎯 Hedefi Geç: ${Math.round(bestPrev)} kg e1RM</div>`;
+    }
+
+    html += `<div class="ex-card" data-exid="${id}">
+      <div class="ex-top"><div class="ex-name" onclick="renameEx('${id}')">${getExName(id)} ✏️</div></div>
+      ${radar}
+      <div class="sets-container">
+        ${data.sets.map((s, i) => renderSetRow(i, s)).join('')}
       </div>
-      <div style="font-size:24px;font-family:var(--font-display);">${(vol/1000).toFixed(1)} <span style="font-size:14px;color:var(--muted);font-family:var(--font-body)">Ton Hacim</span></div>
+      <div style="display:flex;">
+        <button class="btn-action" onclick="addSet(this, false)">+ Set</button>
+        <button class="btn-action" style="color:var(--red);" onclick="addSet(this, true)">+ Drop</button>
+      </div>
     </div>`;
   });
-  feedEl.innerHTML = html;
+  document.getElementById('ex-list').innerHTML = html;
+  document.querySelectorAll('.day-pill').forEach(p => p.className = 'day-pill ' + (p.dataset.day === displayDay ? 'active-'+p.dataset.day : ''));
 }
 
+function renderSetRow(i, s) {
+  return `<div class="set-grid">
+    <div class="set-num ${s.isDrop?'drop-badge':''}">${s.isDrop?'DS':i+1}</div>
+    <input type="number" class="set-input w-in" placeholder="kg" value="${s.w||''}" oninput="save()">
+    <input type="number" class="set-input r-in" placeholder="tek" value="${s.r||''}" oninput="save()">
+    <select class="set-input rpe-in" onchange="save()">
+      ${[10,9.5,9,8.5,8,7.5,7,6].map(v => `<option value="${v}" ${s.rpe==v?'selected':''}>${v}</option>`).join('')}
+    </select>
+    <div class="del-set" onclick="this.parentElement.remove();save();">×</div>
+  </div>`;
+}
+
+function addSet(btn, isDrop) {
+  const container = btn.closest('.ex-card').querySelector('.sets-container');
+  const i = container.children.length;
+  container.insertAdjacentHTML('beforeend', renderSetRow(i, { isDrop }));
+}
+
+function renameEx(id) {
+  const n = prompt("Yeni isim:", getExName(id));
+  if(n) { customNames[id] = n; localStorage.setItem('wt_names', JSON.stringify(customNames)); renderExList(); }
+}
+
+function save() {
+  const date = document.getElementById('log-date').value;
+  const dayEx = [];
+  document.querySelectorAll('.ex-card').forEach(card => {
+    const id = card.dataset.exid;
+    const sets = Array.from(card.querySelectorAll('.set-grid')).map(row => ({
+      w: parseFloat(row.querySelector('.w-in').value),
+      r: parseInt(row.querySelector('.r-in').value),
+      rpe: row.querySelector('.rpe-in').value,
+      isDrop: row.querySelector('.set-num').classList.contains('drop-badge')
+    })).filter(s => s.w > 0);
+    if(sets.length) dayEx.push({ id, sets });
+  });
+  logs = logs.filter(l => l.date !== date);
+  if(dayEx.length || date === today()) logs.push({ date, day: curDay, exercises: dayEx });
+  localStorage.setItem('wt_logs', JSON.stringify(logs));
+}
+
+function renderHistory() {
+  const f = document.getElementById('hist-feed');
+  if(!logs.length) { f.innerHTML = '<div style="text-align:center; color:var(--muted); padding:40px;">Henüz kayıt yok.</div>'; return; }
+  
+  f.innerHTML = logs.sort((a,b) => b.date.localeCompare(a.date)).map(l => {
+    let totalVol = 0; let totalSets = 0; let bestEx = {name:'', e:0};
+    l.exercises.forEach(e => {
+      e.sets.forEach(s => {
+        totalVol += (s.w * s.r); totalSets++;
+        let e1 = calcE1RM(s.w, s.r, s.rpe);
+        if(e1 > bestEx.e) bestEx = {name: getExName(e.id), e: e1};
+      });
+    });
+    return `
+    <div class="chart-container">
+      <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+        <div style="font-weight:700;">${l.date}</div>
+        <div style="color:var(--accent); font-weight:700;">${l.day.toUpperCase()}</div>
+      </div>
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; font-size:12px; color:var(--muted); margin-bottom:12px;">
+        <div>📦 ${totalSets} Set</div>
+        <div>⚖️ ${totalVol} kg Hacim</div>
+      </div>
+      <div style="font-size:13px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.05);">
+        <span style="color:var(--gold)">⭐ En İyi:</span> ${bestEx.name} (${Math.round(bestEx.e)} kg)
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(`page-${id}`).classList.add('active');
+  btn.classList.add('active');
+  if(id === 'progress') renderProgressList();
+  if(id === 'history') renderHistory();
+}
+
+function renderProgressList() {
+  const ids = [...new Set(logs.flatMap(l => l.exercises.map(e => e.id)))];
+  document.getElementById('prog-ex-sel').innerHTML = '<option value="">— Hareket Seç —</option>' + ids.map(id => `<option value="${id}">${getExName(id)}</option>`).join('');
+}
+
+let chart;
 function renderProgress() {
-    let ids = [...new Set(logs.flatMap(l => l.exercises.map(e => e.id)))];
-    let opts = ids.map(id => { let dbInfo = EX_DB.find(x => x.id === id); let name = dbInfo ? dbInfo.name : getExName(id, id); return `<option value="${id}">${name}</option>`; }).join('');
-    document.getElementById('prog-ex-sel').innerHTML = '<option value="">— Egzersiz Seç —</option>' + opts;
+  const id = document.getElementById('prog-ex-sel').value;
+  if(!id) return;
+  const data = logs.filter(l => l.exercises.some(e => e.id === id)).sort((a,b) => a.date.localeCompare(b.date)).map(l => {
+    const ex = l.exercises.find(e => e.id === id);
+    return { date: l.date, val: Math.round(ex.sets.reduce((a,s) => Math.max(a, calcE1RM(s.w, s.r, s.rpe)), 0)) };
+  });
+  document.getElementById('prog-content').innerHTML = `<div class="chart-container"><canvas id="chart"></canvas></div>`;
+  const ctx = document.getElementById('chart').getContext('2d');
+  if(chart) chart.destroy();
+  chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: data.map(d => d.date.slice(5)),
+      datasets: [{
+        data: data.map(d => d.val),
+        backgroundColor: data.map((d, i) => d.val === Math.max(...data.map(x=>x.val)) ? '#facc15' : 'rgba(34,211,238,0.2)'),
+        borderRadius: 6
+      }]
+    },
+    options: { plugins: { legend: { display: false } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' } }, x: { grid: { display: false } } } }
+  });
 }
 
-let chartInst = null;
-function renderExerciseProgress() {
-    const exId = document.getElementById('prog-ex-sel').value;
-    const pc = document.getElementById('prog-charts');
-    if(!exId) { pc.innerHTML = ''; return; }
-    const byDate = {};
-    logs.forEach(log => { log.exercises.forEach(e => { if(e.id===exId) { const best = e.sets.reduce((b,s) => { let e1rm = calcE1RM(s.w, s.r, s.rpe); return (!b || e1rm > b.e1rm) ? {w:s.w, r:s.r, e1rm} : b; }, null); if(best && !byDate[log.date]) byDate[log.date] = best; } }); });
-    const dates = Object.keys(byDate).sort(); if(dates.length < 1) { pc.innerHTML='<div style="text-align:center;color:var(--muted);">Veri yok.</div>'; return; }
-    const e1rmVals = dates.map(d => Math.round(byDate[d].e1rm)); const shortDates = dates.map(d => d.slice(5)); 
-    if(chartInst) chartInst.destroy();
-    pc.innerHTML = `<div class="chart-card"><div style="padding:16px 16px 0;font-size:12px;font-weight:700;color:var(--accent);">Tahmini 1RM (kg)</div><div class="chart-wrap"><canvas id="c1"></canvas></div></div>`;
-    setTimeout(() => { let ctx = document.getElementById('c1').getContext('2d'); chartInst = new Chart(ctx, { type:'line', data:{labels:shortDates, datasets:[{data:e1rmVals, borderColor:'#22d3ee', backgroundColor:'rgba(34,211,238,0.1)', fill:true, tension:0.4, borderWidth: 3}]}, options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{x:{grid:{color:'rgba(255,255,255,0.05)'}}, y:{grid:{color:'rgba(255,255,255,0.05)'}}} } }); }, 50);
-}
-
-function showPage(id, btn) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); document.getElementById('page-'+id).classList.add('active'); btn.classList.add('active'); if(id==='progress') renderProgress(); if(id==='history') renderHistory(); }
 function openSettings() { document.getElementById('settings-modal').classList.add('open'); }
 function closeSettings() { document.getElementById('settings-modal').classList.remove('open'); }
-function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000); }
+function exportData() {
+  const blob = new Blob([JSON.stringify({ logs, customNames })], { type: 'application/json' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `VucutKasa_Yedek.json`; a.click();
+}
+function importData(e) {
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    const d = JSON.parse(ev.target.result);
+    if(d.logs) { logs = d.logs; customNames = d.customNames || {}; localStorage.setItem('wt_logs', JSON.stringify(logs)); location.reload(); }
+  };
+  reader.readAsText(e.target.files[0]);
+}
+function deleteDay() { if(confirm("Günü temizle?")) { const d = document.getElementById('log-date').value; logs = logs.filter(l => l.date !== d); localStorage.setItem('wt_logs', JSON.stringify(logs)); location.reload(); } }
 
-function exportData() { const data = { logs, names: customNames, customs: customExercises }; const blob = new Blob([JSON.stringify(data)], {type: 'application/json'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `Yedek_${today()}.json`; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); closeSettings(); showToast('Yedek indirildi!'); }
-function importData(e) { const file = e.target.files[0]; if(!file) return; const reader = new FileReader(); reader.onload = function(ev) { try { const data = JSON.parse(ev.target.result); if(data.logs) localStorage.setItem('wt2_logs', JSON.stringify(data.logs)); if(data.names) localStorage.setItem('wt2_names', JSON.stringify(data.names)); if(data.customs) localStorage.setItem('wt2_customs', JSON.stringify(data.customs)); showToast('Yüklendi!'); setTimeout(() => location.reload(), 1000); } catch(err) { showToast('Hata!'); } }; reader.readAsText(file); }
-
-selectDay('push');
+document.getElementById('log-date').value = today();
+onDateChange();
 </script>
 </body>
 </html>
