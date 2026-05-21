@@ -204,7 +204,11 @@ function onDateChange() {
   if(document.getElementById('page-body').classList.contains('active')) loadBodyPageData();
 }
 
-function selectDay(day) { curDay = day; save(); renderExList(); }
+// BUG FİX: Sadece günü seç ve DOM'u ekrana bas. Yanlış kaydetmeyi (overwrite) engellemek için save() kaldırıldı!
+function selectDay(day) { 
+  curDay = day; 
+  renderExList(); 
+}
 
 function renderExList() {
   const date = document.getElementById('log-date').value;
